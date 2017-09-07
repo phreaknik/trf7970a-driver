@@ -41,6 +41,9 @@
 
 //=====Driver Configuration======================================
 
+#include <trf79xxa_driver_config.h>
+#include "../src/types.h"
+
 /*
  * Please define the version of the TRF79xxA chip being used (Use
  * decimal, not hex for the numbers)

@@ -42,8 +42,8 @@
 //================================================================
 
 #include <stdio.h>			// standard input/output header
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 //================================================================
 

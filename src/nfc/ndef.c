@@ -35,7 +35,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#include <lib/trf79xxa-driver/nfc/ndef.h>
+#include "ndef.h"
 
 //*****************************************************************************
 //
