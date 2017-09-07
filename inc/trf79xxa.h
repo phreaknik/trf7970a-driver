@@ -83,11 +83,24 @@
  *
  * Eg:
  * #define NFC_FIFO_SIZE 100
- *
  */
 #ifndef NFC_FIFO_SIZE
 #error "Please define the size of the NFC FIFO to store in RAM!"
 #endif
+
+/*
+ * Make sure at least one NFC protocol has been enabled
+ */
+#ifndef ENABLE_14443A
+#ifndef ENABLE_14443B
+#ifndef ENABLE_15693
+#ifndef ENABLE_FELICA
+// No NFC protocols have been enabled
+#warning "No NFC protocols have been enabled for use."
+#endif // ENABLE_14443A
+#endif // ENABLE_14443B
+#endif // ENABLE_15693
+#endif // ENABLE_FELICA
 
 //===============================================================
 
