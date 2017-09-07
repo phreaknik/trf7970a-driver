@@ -304,7 +304,7 @@ uint16_t NDEF_readCapabilityContainer(void)
 
 	if (ui16Status == STATUS_SUCCESS)
 	{
-		MCU_delayMillisecond(1);						// Short delay before sending next command
+		delayMillisecond(1);						// Short delay before sending next command
 
 		ui16Status = NDEF_readBinary(0, 15);					// Read the contents of the capability container
 		// Check if the Read Binary was successful.
@@ -365,7 +365,7 @@ uint16_t NDEF_readApplication(void)
 	}
 
 #ifndef ENABLE_HOST
-	MCU_delayMillisecond(1);						// Short delay before sending next command
+	delayMillisecond(1);						// Short delay before sending next command
 #endif
 
 	ui16Status = NDEF_readBinary(2, ui8NdefReadLength);		// Reads NDEF Application for the NDEF content
@@ -558,7 +558,7 @@ void NDEF_updateBinaryText(void)
 	{
 		g_bBlockNumberBit = !g_bBlockNumberBit; 	// Toggle the PCB Block Number
 
-		MCU_delayMillisecond(5);
+		delayMillisecond(5);
 
 		NDEF_updateBinaryLength(0x19);
 	}
@@ -620,7 +620,7 @@ void NDEF_updateBinaryURI(void)
 	{
 		g_bBlockNumberBit = !g_bBlockNumberBit; 	// Toggle the PCB Block Number
 
-		MCU_delayMillisecond(5);
+		delayMillisecond(5);
 
 		NDEF_updateBinaryLength(0x0F);
 	}

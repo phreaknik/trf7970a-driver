@@ -165,14 +165,14 @@ void TRF79xxA_initialSettings(void)
 	trf79xxaSpi_setup();
 
 	// Delay to allow SPI to finish starting up
-	MCU_delayMillisecond(1);
+	delayMillisecond(1);
 
 	// Send out SOFT_INIT + IDLE initial sequence to soft reset TRF7970A
 	TRF79xxA_sendDirectCommand(TRF79XXA_SOFT_INIT_CMD);
 	TRF79xxA_sendDirectCommand(TRF79XXA_IDLE_CMD);
 
 	// Delay to ensure soft reset has processed
-	MCU_delayMillisecond(1);
+	delayMillisecond(1);
 
 #if (TRF79xxA_VERSION == 70)
 	g_eTrfGeneralSettings.ui8IsoControl = 0x21;
@@ -620,7 +620,7 @@ TRF79xxA_reset(void)
 	TRF79xxA_sendDirectCommand(TRF79XXA_SOFT_INIT_CMD);
 	TRF79xxA_sendDirectCommand(TRF79XXA_IDLE_CMD);
 
-	MCU_delayMillisecond(1);
+	delayMillisecond(1);
 
 	TRF79xxA_resetFIFO();			// Reset the FIFO
 

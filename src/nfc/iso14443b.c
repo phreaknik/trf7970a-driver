@@ -153,7 +153,7 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 	{
 		if (ui8NumberofSlots < 0x04)						// If the number of slots is not the maximum allowed
 		{
-			MCU_delayMillisecond(6);							// Delay prior to recursive function call
+			delayMillisecond(6);							// Delay prior to recursive function call
 			bTagFound = ISO14443B_runAnticollision(ui8NumberofSlots+1,true);	// Recursive call for more time slots to try and resolve collisions
 		}
 	}

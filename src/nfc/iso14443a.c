@@ -471,7 +471,7 @@ tCollisionStatus ISO14443A_runAnticollision(tISO14443A_UidStatus sCascade)
 		}
 	}
 
-	MCU_delayMillisecond(1);							// Small delay prior to sending out packet.
+	delayMillisecond(1);							// Small delay prior to sending out packet.
 
 	sStatus = ISO14443A_sendAnticollisionCmd(sCascade,ui8NVB,&g_pui8PartialUid[0]);				// Issue anti-collision command with the partial UID
 
@@ -981,7 +981,7 @@ uint8_t ISO14443A_sendPPS(void)
 			ui8Status = STATUS_SUCCESS;
 
 			// Execute Bitrate Change
-			MCU_delayMillisecond(1);
+			delayMillisecond(1);
 
 #ifdef ENABLE_HOST
 			UART_sendCString("PPS Success, Bitrate = ");
@@ -1017,7 +1017,7 @@ uint8_t ISO14443A_sendPPS(void)
 				// Do Nothing
 				break;
 			}
-			MCU_delayMillisecond(6);				// Guard time after bitrate change
+			delayMillisecond(6);				// Guard time after bitrate change
 		}
 		else
 		{

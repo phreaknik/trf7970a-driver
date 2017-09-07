@@ -133,7 +133,7 @@ uint8_t NFC_appIso14443a(void)
 	// it shall be able to accept a quest within 5 ms.
 	// PCDs should periodically present an unmodulated field of at least
 	// 5.1 ms duration. (ISO14443-3)
-	MCU_delayMillisecond(6);
+	delayMillisecond(6);
 
 	ISO14443A_setRecursionCount(0); 		// Clear the recursion count for anticollision loops
 
@@ -191,9 +191,9 @@ void NFC_appIso14443aType4NDEF(void)
 
 			if(NDEF_selectApplication() == STATUS_SUCCESS) // Selects NDEF Application
 			{
-				MCU_delayMillisecond(1);						// Short delay before sending next command
+				delayMillisecond(1);						// Short delay before sending next command
 				NDEF_readCapabilityContainer();
-				MCU_delayMillisecond(1);						// Short delay before sending next command
+				delayMillisecond(1);						// Short delay before sending next command
 				NDEF_readApplication();
 			}
 			else
@@ -298,7 +298,7 @@ uint8_t NFC_appIso14443b(void)
 
 	// *NOTE* Guard time extended to 10 milliseconds in order to support passively
 	// powered RF430CL330H designs such as seen in TIDA-00217.
-	MCU_delayMillisecond(10);
+	delayMillisecond(10);
 
 	if (ISO14443B_sendPollCmd(REQB,0))	// Issue REQB Command with 1 slot to start
 	{
@@ -377,7 +377,7 @@ uint8_t NFC_appIso15693(void)
 	// The VCD should wait at least 1 ms after it activated the
 	// powering field before sending the first request, to
 	// ensure that the VICCs are ready to receive it. (ISO15693-3)
-	MCU_delayMillisecond(20);
+	delayMillisecond(20);
 
 	ISO15693_resetTagCount();
 
@@ -387,7 +387,7 @@ uint8_t NFC_appIso15693(void)
 	if (ui8TagFound == STATUS_FAIL)
 	{
 		ISO15693_resetRecursionCount();			// Clear the recursion counter
-		MCU_delayMillisecond(5);				// Delay before issuing the anticollision commmand
+		delayMillisecond(5);				// Delay before issuing the anticollision commmand
 		ui8TagFound = ISO15693_runAnticollision(0x06, 0x00, 0x00);		// Send 16 Slot Inventory request with no mask length and no AFI
 		ui8AddressedFlag = 0x20; 			// Collision occurred, send addressed commands
 	}
@@ -542,7 +542,7 @@ uint8_t NFC_appFeliCa(void)
 	TRF79xxA_setupInitiator(0x1A);			// Use to configure the TRF79xxA for FeliCa @ 212kbps
 //	TRF79xxA_setupInitiator(0x1B);			// Use to configure the TRF79xxA for FeliCa @ 424kbps
 
-	MCU_delayMillisecond(20);					// Guard time of 20 mS.
+	delayMillisecond(20);					// Guard time of 20 mS.
 
 	if (FeliCa_pollSingleSlot() == STATUS_SUCCESS)	// Send a polling command with 4 time slots
 	{

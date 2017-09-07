@@ -289,7 +289,7 @@ uint8_t ISO15693_runAnticollision(uint8_t ui8ReqFlags, uint8_t ui8MaskLength, ui
 
 		case COLLISION_ERROR:		// A collision has occurred for this slot
 			ui16SlotNumber |= (0x01 << (ui8LoopCount2-1));	// Mark a collision occurred in the correct Slot Number bit.
-			MCU_delayMillisecond(5);	// Allow time for tag to finish responding before issuing EOF
+			delayMillisecond(5);	// Allow time for tag to finish responding before issuing EOF
 			break;
 
 		case NO_RESPONSE_RECEIVED:	// No Response was received, break out of function as there is no tag for this slot
@@ -371,7 +371,7 @@ uint8_t ISO15693_runAnticollision(uint8_t ui8ReqFlags, uint8_t ui8MaskLength, ui
 
 		g_pui8AnticollisionMaskBuffer[0] |= ui8MaskValue;								// Now update the mask value of the first byte based on the slot number pointer
 
-		MCU_delayMillisecond(2);
+		delayMillisecond(2);
 
 		if (g_ui8RecursionCount < ISO15693_MAX_RECURSION_COUNT)
 		{
@@ -1089,7 +1089,7 @@ uint8_t ISO15693_sendWriteSingleBlock(uint8_t ui8ReqFlag, uint8_t ui8BlockNumber
 
 			if (g_sTrfStatus == TX_COMPLETE)	// If transmit is complete
 			{
-				MCU_delayMillisecond(10);
+				delayMillisecond(10);
 				TRF79xxA_sendDirectCommand(TRF79XXA_TRANSMIT_NEXT_SLOT_CMD);		// Send out End of Frame marker
 				TRF79xxA_waitRxIRQ(30);				// 30 millisecond RX timeout
 			}
@@ -1109,7 +1109,7 @@ uint8_t ISO15693_sendWriteSingleBlock(uint8_t ui8ReqFlag, uint8_t ui8BlockNumber
 		// Check if the option flag is set
 		if (ui8ReqFlag & 0x40)
 		{
-			MCU_delayMillisecond(10);
+			delayMillisecond(10);
 			TRF79xxA_sendDirectCommand(TRF79XXA_TRANSMIT_NEXT_SLOT_CMD);		// Send out End of Frame marker
 		}
 
