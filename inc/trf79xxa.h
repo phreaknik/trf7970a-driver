@@ -248,4 +248,18 @@ bool TRF79xxA_checkExternalRfField(void);
 
 //===============================================================
 
+//=====TRF79xxA API Externs======================================
+
+extern void trf79xxaSpi_directCommand(uint8_t cmd);
+extern void trf79xxaSpi_setup();
+extern void trf79xxaSpi_rawWrite(uint8_t *payload,
+                                 uint8_t len,
+                                 bool continuedSend);
+extern void trf79xxaSpi_writeSingle(uint8_t *value);
+extern void trf79xxaSpi_writeCont(uint8_t *payload, uint8_t len);
+extern void trf79xxaSpi_readSingle(uint8_t *value);
+extern void trf79xxaSpi_readCont(uint8_t *payload, uint8_t len);
+
+//===============================================================
+
 #endif // _TRF79xxa_H_

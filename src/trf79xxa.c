@@ -38,30 +38,16 @@
 
 #include "trf79xxa.h"
 
-//===============================================================
 
 uint8_t g_pui8TrfBuffer[NFC_FIFO_SIZE];
-
 static uint8_t	g_ui8CollisionPosition;
-
 static uint8_t	g_ui8FifoOffset;
 static uint8_t	g_ui8FifoRxLength;
-
 static tTrfStatus g_sTrfStatus;
 static tTrfSettings g_eTrfGeneralSettings;
-
 static volatile uint8_t g_ui8IrqFlag;
 static volatile uint8_t g_ui8TimeoutFlag;
 
-//*****************************************************************************
-//
-//! \addtogroup trf797x_api TRF7970A Driver API's
-//! @{
-//!
-//! This section describes all the functions contained within the TRF79xxA
-//! driver.
-//
-//*****************************************************************************
 
 //===============================================================
 //
@@ -77,7 +63,7 @@ static volatile uint8_t g_ui8TimeoutFlag;
 
 void TRF79xxA_sendDirectCommand(uint8_t ui8Value)
 {
-	SPI_directCommand(ui8Value);
+	trf79xxaSpi_directCommand(ui8Value);
 }
 
 //===============================================================
@@ -176,7 +162,7 @@ void TRF79xxA_initialSettings(void)
 	g_ui8TimeoutFlag = 0x00;
 
 	// Setup TRF79xxA SPI Module
-	SPI_setup();
+	trf79xxaSpi_setup();
 
 	// Delay to allow SPI to finish starting up
 	MCU_delayMillisecond(1);
@@ -457,7 +443,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 	// First send includes 5 bytes for command overhead
 	if (TRF79xxA_MAX_FIFO_SIZE+5 > ui8Length)
 	{
-		SPI_rawWrite(pui8Payload, ui8Length, bContinuedSend);
+		trf79xxaSpi_rawWrite(pui8Payload, ui8Length, bContinuedSend);
 	}
 	else
 	{
@@ -475,13 +461,13 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 				// Avoid 60A single byte FIFO TX case from sloa140 Section 1.5
 				if ((ui8TxBytesRemaining - ui8TxBytesAvailable) == 1)
 				{
-					SPI_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable-1, bContinuedSend);
+					trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable-1, bContinuedSend);
 					ui8TxBytesRemaining = ui8TxBytesRemaining - ui8TxBytesAvailable - 1;
 				}
 				else
 				{
 #endif
-					SPI_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable, bContinuedSend);
+					trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable, bContinuedSend);
 					ui8TxBytesRemaining = ui8TxBytesRemaining - ui8TxBytesAvailable;
 #if TRF79xxA_VERSION == 60
 				}
@@ -492,7 +478,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 			else
 			{
 				// Last send
-				SPI_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesRemaining, bContinuedSend);
+				trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesRemaining, bContinuedSend);
 				bContinuedSend = false;
 				ui8TxBytesRemaining = 0;
 			}
@@ -566,7 +552,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 void
 TRF79xxA_readContinuous(uint8_t * pui8Payload, uint8_t ui8Length)
 {
-	SPI_readCont(pui8Payload, ui8Length);
+	trf79xxaSpi_readCont(pui8Payload, ui8Length);
 }
 
 //===============================================================
@@ -588,9 +574,9 @@ uint8_t TRF79xxA_readIrqStatus(void)
 
 	pui8Value[0] = TRF79XXA_IRQ_STATUS;
 #if (TRF79xxA_VERSION == 70)
-	SPI_readSingle(pui8Value);
+	trf79xxaSpi_readSingle(pui8Value);
 #elif (TRF79xxA_VERSION == 60)
-	SPI_readCont(pui8Value,2);		// Dummy read to properly clear IRQ Status for TRF796xA devices (except 64A)
+	trf79xxaSpi_readCont(pui8Value,2);		// Dummy read to properly clear IRQ Status for TRF796xA devices (except 64A)
 #endif
 
 	return pui8Value[0];
@@ -611,7 +597,7 @@ uint8_t TRF79xxA_readRegister(uint8_t ui8TrfRegister)
 	uint8_t pui8Value[1];
 
 	pui8Value[0] = ui8TrfRegister;
-	SPI_readSingle(pui8Value);
+	trf79xxaSpi_readSingle(pui8Value);
 
 	return pui8Value[0];
 }
@@ -763,7 +749,7 @@ void TRF79xxA_writeContinuous(uint8_t * pui8Payload, uint8_t ui8Length)
 		}
 
 		// Call continuous write function
-		SPI_writeCont(pui8Payload, ui8Length);
+		trf79xxaSpi_writeCont(pui8Payload, ui8Length);
 	}
 	else
 	{
@@ -817,7 +803,7 @@ void TRF79xxA_writeRegister(uint8_t ui8TrfRegister, uint8_t ui8Value)
 
 	pui8Write[0] = ui8TrfRegister;
 	pui8Write[1] = ui8Value;
-	SPI_writeSingle(pui8Write);
+	trf79xxaSpi_writeSingle(pui8Write);
 }
 
 //===============================================================
@@ -1354,9 +1340,3 @@ TRF79xxA_irqHandler(void)							// interrupt handler
 	__bic_SR_register_on_exit(LPM0_bits);
 }
 
-//*****************************************************************************
-//
-// Close the Doxygen group.
-//! @}
-//
-//*****************************************************************************
