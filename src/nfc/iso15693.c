@@ -189,7 +189,7 @@ uint8_t ISO15693_runAnticollision(uint8_t ui8ReqFlags, uint8_t ui8MaskLength, ui
 	uint8_t ui8MaskByteCount;
 	uint8_t ui8Status = STATUS_FAIL;
 
-	ui8ReqFlags &= ~BIT5;				// Clear Bit 5 to ensure 16 slot inventory is used.
+	ui8ReqFlags &= ~BIT(5);				// Clear Bit 5 to ensure 16 slot inventory is used.
 
 	ui8MaskByteCount = (((ui8MaskLength >> 2) + 1) >> 1);	// Set ui8MaskByteCount based on the inputted Mask Length
 															// ui8MaskByteCount will be 1 for length = 4 or 8,

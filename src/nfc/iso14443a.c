@@ -178,7 +178,7 @@ uint8_t ISO14443A_selectTag(uint8_t ui8Command)
 			if (ISO14443A_sendSelectCmd(sUidProgress,&g_pui8CompleteUid[g_ui8UidPos],bSendCT)) 	// Issue the Select Command
 			{
 				// If successful, use SAK information to determine if the UID is complete
-				if ((g_ui8Iso14443aSAK & BIT2) == 0x00)
+				if ((g_ui8Iso14443aSAK & BIT(2)) == 0x00)
 				{
 					// UID complete, set status to success
 					ui8Status = STATUS_SUCCESS;
@@ -244,7 +244,7 @@ uint8_t ISO14443A_selectTag(uint8_t ui8Command)
 			if (sCollisionStatus == NO_COLLISION)
 			{
 				// If successful, use SAK information to determine if the UID is complete
-				if ((g_ui8Iso14443aSAK & BIT2) == 0x00)
+				if ((g_ui8Iso14443aSAK & BIT(2)) == 0x00)
 				{
 					// UID complete, set status to success
 					ui8Status = STATUS_SUCCESS;
@@ -326,7 +326,7 @@ uint8_t ISO14443A_selectTag(uint8_t ui8Command)
 		UART_putNewLine();
 #endif
 		// Output compliance to ISO14443-4
-		if (g_ui8Iso14443aSAK & BIT5)
+		if (g_ui8Iso14443aSAK & BIT(5))
 		{
 			g_bType4ACompliant = true;
 #ifdef ENABLE_HOST
@@ -499,7 +499,7 @@ tCollisionStatus ISO14443A_runAnticollision(tISO14443A_UidStatus sCascade)
 			if (g_sUidSize == ISO14443A_UID_UNKNOWN)
 			{
 				// Use SAK information to determine if the UID is complete
-				if ((g_ui8Iso14443aSAK & BIT2) == 0x00)
+				if ((g_ui8Iso14443aSAK & BIT(2)) == 0x00)
 				{
 					if (sCascade == CASCADE1)
 					{

@@ -108,7 +108,7 @@ TRF79xxA_enableSlotCounter(void)
 	uint8_t ui8Value;
 
 	ui8Value = TRF79xxA_readRegister(TRF79XXA_IRQ_MASK);
-	ui8Value |= BIT0;		// Set BIT0 in register 0x0D
+	ui8Value |= BIT(0);		// Set BIT0 in register 0x0D
 	TRF79xxA_writeRegister(TRF79XXA_IRQ_MASK,ui8Value);
 }
 
@@ -223,7 +223,7 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		TRF79xxA_resetFIFO();				// reset the FIFO after TX
 	}
 
-	else if((*pui8IrqStatus & BIT1) == TRF79XXA_IRQ_STATUS_COLLISION_ERROR)
+	else if((*pui8IrqStatus & BIT(1)) == TRF79XXA_IRQ_STATUS_COLLISION_ERROR)
 	{								// Collision error
 		if ((g_eTrfGeneralSettings.ui8IsoControl == 0x08) || (g_eTrfGeneralSettings.ui8IsoControl == 0x88))
 		{
@@ -355,9 +355,9 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		// RX has begun but as not completed, space exists in FIFO still, just wait longer to receive full reply.
 		g_sTrfStatus = RX_WAIT_EXTENSION;
 	}
-	else if((*pui8IrqStatus & BIT4) == TRF79XXA_IRQ_STATUS_CRC_ERROR)		// CRC error
+	else if((*pui8IrqStatus & BIT(4)) == TRF79XXA_IRQ_STATUS_CRC_ERROR)		// CRC error
 	{
-		if((*pui8IrqStatus & BIT6) == TRF79XXA_IRQ_STATUS_RX_COMPLETE)		// 4 Bit receive
+		if((*pui8IrqStatus & BIT(6)) == TRF79XXA_IRQ_STATUS_RX_COMPLETE)		// 4 Bit receive
 		{
 			ui8DummyRead = TRF79XXA_FIFO;		// write the recieved bytes to the correct place of the buffer
 
@@ -368,13 +368,13 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 
 		g_sTrfStatus = PROTOCOL_ERROR;
 	}
-	else if((*pui8IrqStatus & BIT2) == TRF79XXA_IRQ_STATUS_FRAMING_ERROR)	// byte framing error
+	else if((*pui8IrqStatus & BIT(2)) == TRF79XXA_IRQ_STATUS_FRAMING_ERROR)	// byte framing error
 	{
-		if((*pui8IrqStatus & BIT5) == TRF79XXA_IRQ_STATUS_FIFO_HIGH_OR_LOW)
+		if((*pui8IrqStatus & BIT(5)) == TRF79XXA_IRQ_STATUS_FIFO_HIGH_OR_LOW)
 		{
 			g_sTrfStatus = RX_WAIT;
 		}
-		else if ((*pui8IrqStatus & BIT6) == TRF79XXA_IRQ_STATUS_RX_COMPLETE)
+		else if ((*pui8IrqStatus & BIT(6)) == TRF79XXA_IRQ_STATUS_RX_COMPLETE)
 		{
 			if((g_eTrfGeneralSettings.ui8IsoControl & 0xF8) == 0x00)		// Covers all ISO15693 Data Rates for RFID mode with RX CRC on
 			{
@@ -730,7 +730,7 @@ void TRF79xxA_writeContinuous(uint8_t * pui8Payload, uint8_t ui8Length)
 	{
 		if (*pui8Payload == TRF79XXA_CHIP_STATUS_CONTROL)	// If the write starts at the Chip Status Control Register
 		{
-			if (((*pui8Payload+1) & BIT5) == BIT5)	// Check for RF field bit and update variable
+			if (((*pui8Payload+1) & BIT(5)) == BIT(5))	// Check for RF field bit and update variable
 			{
 				g_eTrfGeneralSettings.bRfFieldOn = true;
 			}
@@ -781,7 +781,7 @@ void TRF79xxA_writeRegister(uint8_t ui8TrfRegister, uint8_t ui8Value)
 	{
 		// Attempt to enable Card Emulation/Peer to Peer which is not supported by firmware
 		// Exit function to avoid issues with that
-		if ((ui8Value & BIT5) == BIT5)
+		if ((ui8Value & BIT(5)) == BIT(5))
 		{
 			return;
 		}
@@ -791,7 +791,7 @@ void TRF79xxA_writeRegister(uint8_t ui8TrfRegister, uint8_t ui8Value)
 
 	if (ui8TrfRegister == TRF79XXA_CHIP_STATUS_CONTROL)
 	{
-		if ((ui8Value & BIT5) == BIT5)	// Check for RF field bit and update variable
+		if ((ui8Value & BIT(5)) == BIT(5))	// Check for RF field bit and update variable
 		{
 			g_eTrfGeneralSettings.bRfFieldOn = true;
 		}
