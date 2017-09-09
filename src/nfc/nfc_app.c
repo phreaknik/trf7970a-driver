@@ -90,11 +90,13 @@ void NFC_findTag(void)
 								// Can supports tags from 256bit tags (TI HF-I Std/Pro) to 64kbit (STM M24LR64) tags
 #endif
 
-#ifdef ENABLE_STANDALONE		// No card detected
-	LED_14443A_OFF;
-	LED_14443B_OFF;
-	LED_15693_OFF;
-#endif
+    // No card has been detected
+    NfcEvent_t event = {ISO14443A_DISCONNECTED, NULL, NULL};
+    nfcEventHandler(event);
+    event = (NfcEvent_t){ISO14443B_DISCONNECTED, NULL, NULL};
+    nfcEventHandler(event);
+    event = (NfcEvent_t){ISO15693_DISCONNECTED, NULL, NULL};
+    nfcEventHandler(event);
 }
 
 //*****************************************************************************
@@ -150,9 +152,9 @@ uint8_t NFC_appIso14443a(void)
 	}
 	else
 	{
-#ifdef ENABLE_STANDALONE		// No card detected
-		LED_14443A_OFF;
-#endif
+	    // No card detected
+	    NfcEvent_t event = {ISO14443A_DISCONNECTED, NULL, NULL};
+	    nfcEventHandler(event);
 	}
 
 	TRF79xxA_turnRfOff();
@@ -198,17 +200,16 @@ void NFC_appIso14443aType4NDEF(void)
 			}
 			else
 			{
-#ifdef ENABLE_STANDALONE
-				LED_14443A_OFF;
-#endif
+		        NfcEvent_t event = {ISO14443A_DISCONNECTED, NULL, NULL};
+		        nfcEventHandler(event);
 			}
 		}
 	}
 	else
 	{
-#ifdef ENABLE_STANDALONE		// Tag was not activated properly
-		LED_14443A_OFF;
-#endif
+	    // Tag was not activated properly
+        NfcEvent_t event = {ISO14443A_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 #endif
 }
@@ -247,9 +248,9 @@ void NFC_appIso14443aType2(uint8_t ui8ReadBlocks)
 			UART_putByte(ui8BlockNumber+3);
 			UART_putNewLine();
 #endif
-#ifdef ENABLE_STANDALONE
-			LED_14443A_OFF;
-#endif
+
+            NfcEvent_t event = {ISO14443A_DISCONNECTED, NULL, NULL};
+            nfcEventHandler(event);
 			break;
 		}
 	}
@@ -323,17 +324,16 @@ uint8_t NFC_appIso14443b(void)
 			}
 			else
 			{
-#ifdef ENABLE_STANDALONE
-				LED_14443B_OFF;
-#endif
+                NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+                nfcEventHandler(event);
 			}
 		}
 	}
 	else
 	{
-#ifdef ENABLE_STANDALONE		// No card detected
-		LED_14443B_OFF;
-#endif
+	    // No card detected
+        NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 
 	TRF79xxA_turnRfOff();		// Turn off RF field once done reading the tag(s)
@@ -416,9 +416,9 @@ uint8_t NFC_appIso15693(void)
 	}
 	else
 	{
-#ifdef ENABLE_STANDALONE		// No card detected
-		LED_15693_OFF;
-#endif
+	    // No card detected
+        NfcEvent_t event = {ISO15693_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 
 	TRF79xxA_turnRfOff();						// Turn off RF field once done reading the tag(s)
@@ -459,7 +459,10 @@ void NFC_appIso15693ReadTag(uint8_t ui8ReqFlag)
 		{
 			if (ISO15693_sendReadSingleBlock(ui8ReqFlag, ui16LoopCount) == STATUS_FAIL)	// Keep reading blocks unless a No Response is received
 			{
-				LED_15693_OFF;
+	            // Signal connection has been lost
+	            NfcEvent_t event = {ISO15693_DISCONNECTED, NULL, NULL};
+	            nfcEventHandler(event);
+
 				// No Response - stop reading
 				break;
 			}
@@ -504,7 +507,10 @@ void NFC_appIso15693ReadExtendedTag(uint8_t ui8ReqFlag)
 		{
 			if (ISO15693_sendReadSingleBlockExtended(ui8ReqFlag, ui16LoopCount) == STATUS_FAIL)	// Keep reading blocks until a No Response is received
 			{
-				LED_15693_OFF;
+                // Signal connection has been lost
+                NfcEvent_t event = {ISO15693_DISCONNECTED, NULL, NULL};
+                nfcEventHandler(event);
+
 				// No Response - stop reading
 				break;
 			}
@@ -556,16 +562,25 @@ uint8_t NFC_appFeliCa(void)
 		}
 		else
 		{
-			LED_15693_OFF;
-			LED_14443B_OFF;
+	        // Signal connection has been lost
+	        NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+	        nfcEventHandler(event);
+
+            // Signal connection has been lost
+            event = (NfcEvent_t){ISO15693_DISCONNECTED, NULL, NULL};
+            nfcEventHandler(event);
 		}
 	}
 	else
 	{
-#ifdef ENABLE_STANDALONE		// No card detected
-		LED_15693_OFF;
-		LED_14443B_OFF;
-#endif
+	    // No cards have been detected
+        // Signal connection has been lost
+        NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
+
+        // Signal connection has been lost
+        event = (NfcEvent_t){ISO15693_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 
 	TRF79xxA_turnRfOff();						// Turn off RF field once done reading the tag(s)

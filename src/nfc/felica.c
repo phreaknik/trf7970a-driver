@@ -117,18 +117,25 @@ uint8_t FeliCa_pollSingleSlot(void)
 		// Unknown error occurred.
 	}
 
-#ifdef ENABLE_STANDALONE
 	if(ui8TagFound == STATUS_SUCCESS)
 	{
-		LED_15693_ON;
-		LED_14443B_ON;
+
+        // Indicate detected ISO14443B tag
+        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
+
+        // Indicate detected ISO15693 tag
+        event = (NfcEvent_t){ISO15693_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 	else
 	{
-		LED_15693_OFF;
-		LED_14443B_OFF;
+        NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
+
+        event = (NfcEvent_t){ISO15693_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
-#endif
 
 	return ui8TagFound;
 }

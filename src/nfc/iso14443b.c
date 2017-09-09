@@ -114,9 +114,9 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 	if (ISO14443B_sendPollCmd(REQB,ui8NumberofSlots))	// Issue a REQB Command with the inputted number of slots
 	{
 		bTagFound = true;	// Mark that a tag has been found
-#ifdef ENABLE_STANDALONE
-		LED_14443B_ON;		// LEDs indicate detected ISO15693 tag
-#endif
+        // Indicate detected ISO14443B tag
+        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 	else if (g_sTrfStatus == COLLISION_ERROR)				// If a collision occurred
 	{
@@ -132,9 +132,9 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 		if (ui8Status == STATUS_SUCCESS)					// Tag responded without collision
 		{
 			bTagFound = true;								// Mark that a tag has been found
-#ifdef ENABLE_STANDALONE
-			LED_14443B_ON;		// LEDs indicate detected ISO15693 tag
-#endif
+	        // Indicate detected ISO14443B tag
+	        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
+	        nfcEventHandler(event);
 		}
 		else												// An error occurred when getting the tag response
 		{
@@ -158,16 +158,17 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 		}
 	}
 
-#ifdef ENABLE_STANDALONE
 	if (bTagFound)
 	{
-		LED_14443B_ON;		// LEDs indicate detected ISO15693 tag
+        // Indicate detected ISO14443B tag
+        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 	else
 	{
-		LED_14443B_OFF;
+        NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
-#endif
 
 	return bTagFound;
 }
@@ -213,9 +214,9 @@ uint8_t ISO14443B_sendPollCmd(uint8_t ui8Command, uint8_t ui8NValue)
 	{
 		ui8Status = STATUS_SUCCESS;					// Received reply with no collisions
 
-#ifdef ENABLE_STANDALONE
-		LED_14443B_ON;		// LEDs indicate detected ISO15693 tag
-#endif
+        // Indicate detected ISO14443B tag
+        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 
 		for(ui8LoopCount = 1; ui8LoopCount < 5; ui8LoopCount++)
 		{

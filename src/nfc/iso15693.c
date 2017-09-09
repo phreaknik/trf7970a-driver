@@ -133,16 +133,17 @@ uint8_t ISO15693_sendSingleSlotInventory(void)
 		ui8Status = STATUS_FAIL;
 	}
 
-#ifdef ENABLE_STANDALONE
 	if (ui8Status == STATUS_SUCCESS)
 	{
-		LED_15693_ON;		// LEDs indicate detected ISO15693 tag
+	    // Indicate detected ISO15693 tag
+	    NfcEvent_t event = {ISO15693_CONNECTED, NULL, NULL};
+	    nfcEventHandler(event);
 	}
 	else
 	{
-		LED_15693_OFF;
+        NfcEvent_t event = {ISO15693_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
-#endif
 
 	return ui8Status;
 }
@@ -403,16 +404,17 @@ uint8_t ISO15693_runAnticollision(uint8_t ui8ReqFlags, uint8_t ui8MaskLength, ui
 		}
 	}
 
-#ifdef ENABLE_STANDALONE
 	if (ui8Status == STATUS_SUCCESS)
 	{
-		LED_15693_ON;		// LEDs indicate detected ISO15693 tag
+        // Indicate detected ISO15693 tag
+        NfcEvent_t event = {ISO15693_CONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
 	else
 	{
-		LED_15693_OFF;
+        NfcEvent_t event = {ISO15693_DISCONNECTED, NULL, NULL};
+        nfcEventHandler(event);
 	}
-#endif
 
 	// Clear any IRQs
 	TRF79xxA_resetIrqStatus();

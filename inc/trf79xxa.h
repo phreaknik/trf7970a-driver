@@ -146,6 +146,27 @@ typedef enum
     NO_RESPONSE_RECEIVED_15693
 } tTrfStatus;
 
+// NFC Event Codes
+typedef enum
+{
+    ISO14443A_CONNECTED,
+    ISO14443B_CONNECTED,
+    ISO15693_CONNECTED,
+    FELICA_CONNECTED,
+    ISO14443A_DISCONNECTED,
+    ISO14443B_DISCONNECTED,
+    ISO15693_DISCONNECTED,
+    FELICA_DISCONNECTED,
+} NfcEventCode_t;
+
+// NFC Event struct
+typedef struct
+{
+    NfcEventCode_t eventCode;
+    void *data;
+    size_t dataLen;
+} NfcEvent_t;
+
 //===============================================================
 
 //===============================================================
@@ -279,6 +300,9 @@ extern void trf79xxaSpi_readCont(uint8_t *payload, uint8_t len);
 
 //---- Timing ---------------------------------------------------
 extern void delayMillisecond(unsigned int delay);
+
+//---- NFC Event Handlers ---------------------------------------
+extern void nfcEventHandler(NfcEvent_t event);
 
 //===============================================================
 

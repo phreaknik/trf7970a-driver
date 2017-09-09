@@ -298,13 +298,16 @@ uint8_t ISO14443A_selectTag(uint8_t ui8Command)
 		}
 	}
 
-	// This won't repetively trigger after the recursive call of ISO14443A_selectTag since the sUidProgress will not change
+	// This won't repetitively trigger after the recursive call of ISO14443A_selectTag since the sUidProgress will not change
 	if (sUidProgress == UID_COMPLETE)
 	{
 		// Set Bit 1 in Special Functions Register to 1
 		TRF79xxA_writeRegister(TRF79XXA_SPECIAL_FUNCTION_1,0x02);
 
-		LED_14443A_ON;
+		// Signal connection has been established
+		NfcEvent_t event = {ISO14443A_CONNECTED, NULL, NULL};
+		nfcEventHandler(event);
+
 #ifdef ENABLE_HOST
 		// UID Completed
 		UART_putNewLine();
