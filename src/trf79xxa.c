@@ -487,12 +487,12 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 			// Clear the IRQ Flag
 			g_ui8IrqFlag = 0x00;
 			// Setup for the Timer
-			MCU_setCounter(5);
+			startAsyncTimer(5, TRF79xxA_timerHandler);
 			while((g_ui8IrqFlag == 0x00) && (g_ui8TimeoutFlag == 0x00))	// Wait for an interrupt
 			{
 				// Do Nothing
 			}
-			RESET_COUNTER;
+			resetAsyncTimer();
 
 			if (g_sTrfStatus == TX_WAIT)
 			{
@@ -924,12 +924,12 @@ void TRF79xxA_waitTxIRQ(uint8_t ui8TxTimeout)
 		// Clear the IRQ Flag
 		g_ui8IrqFlag = 0x00;
 		// Setup for the Timer
-		MCU_setCounter(ui8TxTimeout);
+		startAsyncTimer(ui8TxTimeout, TRF79xxA_timerHandler);
 		while((g_ui8IrqFlag == 0x00) && (g_ui8TimeoutFlag == 0x00))	// Wait for an interrupt
 		{
 			// Do Nothing
 		}
-		RESET_COUNTER;
+		resetAsyncTimer();
 		if (g_sTrfStatus != TX_COMPLETE)
 		{
 			if (g_sTrfStatus == TX_WAIT)	// Wait longer since we received an 0xA0
@@ -972,7 +972,7 @@ void TRF79xxA_waitRxIRQ(uint8_t ui8RxTimeout)
 		// Clear the IRQ Flag
 		g_ui8IrqFlag = 0x00;
 		// Setup for the Timer
-		MCU_setCounter(ui8RxTimeout);
+		startAsyncTimer(ui8RxTimeout, TRF79xxA_timerHandler);
 		while((g_ui8IrqFlag == 0x00) && (g_ui8TimeoutFlag == 0x00))	// Wait for an interrupt
 		{
 			// Do Nothing
@@ -983,15 +983,15 @@ void TRF79xxA_waitRxIRQ(uint8_t ui8RxTimeout)
 #if (TRF79xxA_VERSION == 70)
 			if ((g_eTrfGeneralSettings.ui8IsoControl & 0x1F) > 0x07)
 			{
-				MCU_setCounter(7);
+				startAsyncTimer(7, TRF79xxA_timerHandler);
 			}
 			else
 			{
-				MCU_setCounter(50);
+				startAsyncTimer(50, TRF79xxA_timerHandler);
 			}
 #endif
 #if (TRF79xxA_VERSION == 60)
-			MCU_setCounter(5);
+			startAsyncTimer(5, TRF79xxA_timerHandler);
 #endif
 			while((g_ui8IrqFlag == 0x00) && (g_ui8TimeoutFlag == 0x00))	// Wait for an interrupt
 			{
@@ -1004,7 +1004,7 @@ void TRF79xxA_waitRxIRQ(uint8_t ui8RxTimeout)
 			}
 #endif
 		}
-		RESET_COUNTER;
+		resetAsyncTimer();
 		if (g_sTrfStatus == RX_WAIT)
 		{
 			// Exit the while loop
@@ -1271,13 +1271,11 @@ bool TRF79xxA_checkExternalRfField(void)
 //
 //===============================================================
 
-#pragma vector=TIMER0_A0_VECTOR
-__interrupt void
-TRF79xxA_timerHandler(void)
+void TRF79xxA_timerHandler(void)
 {
 	uint8_t ui8IrqStatus;
 
-	STOP_COUNTER;
+	stopAsyncTimer();
 
 	g_ui8TimeoutFlag = 0x01;
 
@@ -1314,7 +1312,7 @@ TRF79xxA_irqHandler(void)							// interrupt handler
 {
 	uint8_t ui8IrqStatus;
 
-	STOP_COUNTER;							// stop timer mode
+	stopAsyncTimer();							// stop timer mode
 
 	g_ui8IrqFlag = 0x01;
 
