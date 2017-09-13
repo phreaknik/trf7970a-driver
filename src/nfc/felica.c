@@ -122,19 +122,19 @@ uint8_t FeliCa_pollSingleSlot(void)
 
         // Indicate detected ISO14443B tag
         NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 
         // Indicate detected ISO15693 tag
         event = (NfcEvent_t){ISO15693_CONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 	}
 	else
 	{
         NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 
         event = (NfcEvent_t){ISO15693_DISCONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 	}
 
 	return ui8TagFound;

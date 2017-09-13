@@ -290,26 +290,26 @@ void TRF79xxA_irqHandler(void);
 //==== TRF79xxA API Externs =====================================
 
 //---- Serial Communication Interface ---------------------------
-extern void trf79xxaSpi_directCommand(uint8_t cmd);
-extern void trf79xxaSpi_setup();
-extern void trf79xxaSpi_rawWrite(uint8_t *payload,
+extern void TRF79xxA_spiSetup();
+extern void TRF79xxA_spiDirectCommand(uint8_t cmd);
+extern void TRF79xxA_spiRawWrite(uint8_t *payload,
                                  uint8_t len,
                                  bool continuedSend);
-extern void trf79xxaSpi_writeSingle(uint8_t *value);
-extern void trf79xxaSpi_writeCont(uint8_t *payload, uint8_t len);
-extern void trf79xxaSpi_readSingle(uint8_t *value);
-extern void trf79xxaSpi_readCont(uint8_t *payload, uint8_t len);
-extern void trf79xxa_irqClear();
+extern void TRF79xxA_spiWriteSingle(uint8_t *value);
+extern void TRF79xxA_spiWriteCont(uint8_t *payload, uint8_t len);
+extern void TRF79xxA_spiReadSingle(uint8_t *value);
+extern void TRF79xxA_spiReadCont(uint8_t *payload, uint8_t len);
+extern void TRF79xxA_irqClear();
 
 //---- Timing ---------------------------------------------------
-extern void delayMillisecond(unsigned int msDelay);
-extern void startAsyncTimer(unsigned int msDelay,
-                            void (*asyncTimerCallback)(void));
-extern void stopAsyncTimer();
-extern void resetAsyncTimer();
+extern void TRF79xxA_delayMillisecond(unsigned int msDelay);
+extern void TRF79xxA_startAsyncTimer(unsigned int msDelay,
+                                     void (*asyncTimerCallback)(void));
+extern void TRF79xxA_stopAsyncTimer();
+extern void TRF79xxA_resetAsyncTimer();
 
 //---- Event Handlers -------------------------------------------
-extern void nfcEventHandler(NfcEvent_t event);
+extern void TRF79xxA_nfcEventHandler(NfcEvent_t event);
 
 //===============================================================
 

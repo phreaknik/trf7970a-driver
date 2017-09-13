@@ -63,7 +63,7 @@ static volatile uint8_t g_ui8TimeoutFlag;
 
 void TRF79xxA_sendDirectCommand(uint8_t ui8Value)
 {
-	trf79xxaSpi_directCommand(ui8Value);
+    TRF79xxA_spiDirectCommand(ui8Value);
 }
 
 //===============================================================
@@ -162,7 +162,7 @@ void TRF79xxA_initialSettings(void)
 	g_ui8TimeoutFlag = 0x00;
 
 	// Setup TRF79xxA SPI Module
-	trf79xxaSpi_setup();
+	TRF79xxA_spiSetup();
 
 	// Delay to allow SPI to finish starting up
 	delayMillisecond(1);
@@ -277,7 +277,7 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		TRF79xxA_resetFIFO();		// reset the FIFO after TX
 		TRF79xxA_resetIrqStatus();
 
-		trf79xxa_irqClear();
+		TRF79xxA_irqClear();
 	}
 	else if(*pui8IrqStatus == TRF79XXA_IRQ_STATUS_RX_COMPLETE)
 	{	// RX flag means that EOF has been recieved
@@ -411,7 +411,7 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		TRF79xxA_reset();
 		TRF79xxA_resetIrqStatus();
 
-		trf79xxa_irqClear();
+		TRF79xxA_irqClear();
 	}
 }							// Interrupt Service Routine
 
@@ -443,7 +443,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 	// First send includes 5 bytes for command overhead
 	if (TRF79xxA_MAX_FIFO_SIZE+5 > ui8Length)
 	{
-		trf79xxaSpi_rawWrite(pui8Payload, ui8Length, bContinuedSend);
+	    TRF79xxA_spiRawWrite(pui8Payload, ui8Length, bContinuedSend);
 	}
 	else
 	{
@@ -461,13 +461,13 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 				// Avoid 60A single byte FIFO TX case from sloa140 Section 1.5
 				if ((ui8TxBytesRemaining - ui8TxBytesAvailable) == 1)
 				{
-					trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable-1, bContinuedSend);
+				    TRF79xxA_spiRawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable-1, bContinuedSend);
 					ui8TxBytesRemaining = ui8TxBytesRemaining - ui8TxBytesAvailable - 1;
 				}
 				else
 				{
 #endif
-					trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable, bContinuedSend);
+				    TRF79xxA_spiRawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesAvailable, bContinuedSend);
 					ui8TxBytesRemaining = ui8TxBytesRemaining - ui8TxBytesAvailable;
 #if TRF79xxA_VERSION == 60
 				}
@@ -478,7 +478,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 			else
 			{
 				// Last send
-				trf79xxaSpi_rawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesRemaining, bContinuedSend);
+			    TRF79xxA_spiRawWrite(&pui8Payload[ui8TxIndex], ui8TxBytesRemaining, bContinuedSend);
 				bContinuedSend = false;
 				ui8TxBytesRemaining = 0;
 			}
@@ -552,7 +552,7 @@ TRF79xxA_writeRaw(uint8_t * pui8Payload, uint8_t ui8Length)
 void
 TRF79xxA_readContinuous(uint8_t * pui8Payload, uint8_t ui8Length)
 {
-	trf79xxaSpi_readCont(pui8Payload, ui8Length);
+    TRF79xxA_spiReadCont(pui8Payload, ui8Length);
 }
 
 //===============================================================
@@ -574,9 +574,9 @@ uint8_t TRF79xxA_readIrqStatus(void)
 
 	pui8Value[0] = TRF79XXA_IRQ_STATUS;
 #if (TRF79xxA_VERSION == 70)
-	trf79xxaSpi_readSingle(pui8Value);
+	TRF79xxA_spiReadSingle(pui8Value);
 #elif (TRF79xxA_VERSION == 60)
-	trf79xxaSpi_readCont(pui8Value,2);		// Dummy read to properly clear IRQ Status for TRF796xA devices (except 64A)
+	TRF79xxA_spiReadCont(pui8Value,2);		// Dummy read to properly clear IRQ Status for TRF796xA devices (except 64A)
 #endif
 
 	return pui8Value[0];
@@ -597,7 +597,7 @@ uint8_t TRF79xxA_readRegister(uint8_t ui8TrfRegister)
 	uint8_t pui8Value[1];
 
 	pui8Value[0] = ui8TrfRegister;
-	trf79xxaSpi_readSingle(pui8Value);
+	TRF79xxA_spiReadSingle(pui8Value);
 
 	return pui8Value[0];
 }
@@ -749,7 +749,7 @@ void TRF79xxA_writeContinuous(uint8_t * pui8Payload, uint8_t ui8Length)
 		}
 
 		// Call continuous write function
-		trf79xxaSpi_writeCont(pui8Payload, ui8Length);
+		TRF79xxA_spiWriteCont(pui8Payload, ui8Length);
 	}
 	else
 	{
@@ -803,7 +803,7 @@ void TRF79xxA_writeRegister(uint8_t ui8TrfRegister, uint8_t ui8Value)
 
 	pui8Write[0] = ui8TrfRegister;
 	pui8Write[1] = ui8Value;
-	trf79xxaSpi_writeSingle(pui8Write);
+	TRF79xxA_spiWriteSingle(pui8Write);
 }
 
 //===============================================================
@@ -1317,7 +1317,7 @@ void TRF79xxA_irqHandler(void)
 
 	do
 	{
-	    trf79xxa_irqClear();
+	    TRF79xxA_irqClear();
 
 		// IRQ status register has to be read
 		ui8IrqStatus = TRF79xxA_readIrqStatus();

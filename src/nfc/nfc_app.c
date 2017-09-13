@@ -64,7 +64,7 @@
 
 void NFC_findTag(void)
 {
-    trf79xxa_irqClear();        // Clear IRQ interrupt flag
+    TRF79xxA_irqClear();        // Clear IRQ interrupt flag
 
 	TRF79xxA_reset();			// Soft Reset the TRF79xxA to ensure it is in a good state at the start of each process
 								// This is a recommended best practice

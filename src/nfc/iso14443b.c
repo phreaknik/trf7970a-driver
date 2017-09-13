@@ -116,7 +116,7 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 		bTagFound = true;	// Mark that a tag has been found
         // Indicate detected ISO14443B tag
         NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 	}
 	else if (g_sTrfStatus == COLLISION_ERROR)				// If a collision occurred
 	{
@@ -134,7 +134,7 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 			bTagFound = true;								// Mark that a tag has been found
 	        // Indicate detected ISO14443B tag
 	        NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
-	        nfcEventHandler(event);
+	        TRF79xxA_nfcEventHandler(event);
 		}
 		else												// An error occurred when getting the tag response
 		{
@@ -153,7 +153,7 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 	{
 		if (ui8NumberofSlots < 0x04)						// If the number of slots is not the maximum allowed
 		{
-			delayMillisecond(6);							// Delay prior to recursive function call
+		    TRF79xxA_delayMillisecond(6);							// Delay prior to recursive function call
 			bTagFound = ISO14443B_runAnticollision(ui8NumberofSlots+1,true);	// Recursive call for more time slots to try and resolve collisions
 		}
 	}
@@ -162,12 +162,12 @@ bool ISO14443B_runAnticollision(uint8_t ui8NumberofSlots, bool bRecursion)
 	{
         // Indicate detected ISO14443B tag
         NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 	}
 	else
 	{
         NfcEvent_t event = {ISO14443B_DISCONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 	}
 
 	return bTagFound;
@@ -216,7 +216,7 @@ uint8_t ISO14443B_sendPollCmd(uint8_t ui8Command, uint8_t ui8NValue)
 
         // Indicate detected ISO14443B tag
         NfcEvent_t event = {ISO14443B_CONNECTED, NULL, NULL};
-        nfcEventHandler(event);
+        TRF79xxA_nfcEventHandler(event);
 
 		for(ui8LoopCount = 1; ui8LoopCount < 5; ui8LoopCount++)
 		{

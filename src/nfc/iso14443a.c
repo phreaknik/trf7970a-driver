@@ -306,7 +306,7 @@ uint8_t ISO14443A_selectTag(uint8_t ui8Command)
 
 		// Signal connection has been established
 		NfcEvent_t event = {ISO14443A_CONNECTED, NULL, NULL};
-		nfcEventHandler(event);
+		TRF79xxA_nfcEventHandler(event);
 
 #ifdef ENABLE_HOST
 		// UID Completed
@@ -474,7 +474,7 @@ tCollisionStatus ISO14443A_runAnticollision(tISO14443A_UidStatus sCascade)
 		}
 	}
 
-	delayMillisecond(1);							// Small delay prior to sending out packet.
+	TRF79xxA_delayMillisecond(1);							// Small delay prior to sending out packet.
 
 	sStatus = ISO14443A_sendAnticollisionCmd(sCascade,ui8NVB,&g_pui8PartialUid[0]);				// Issue anti-collision command with the partial UID
 
@@ -984,7 +984,7 @@ uint8_t ISO14443A_sendPPS(void)
 			ui8Status = STATUS_SUCCESS;
 
 			// Execute Bitrate Change
-			delayMillisecond(1);
+			TRF79xxA_delayMillisecond(1);
 
 #ifdef ENABLE_HOST
 			UART_sendCString("PPS Success, Bitrate = ");
@@ -1020,7 +1020,7 @@ uint8_t ISO14443A_sendPPS(void)
 				// Do Nothing
 				break;
 			}
-			delayMillisecond(6);				// Guard time after bitrate change
+			TRF79xxA_delayMillisecond(6);				// Guard time after bitrate change
 		}
 		else
 		{
