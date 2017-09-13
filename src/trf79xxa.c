@@ -277,7 +277,7 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		TRF79xxA_resetFIFO();		// reset the FIFO after TX
 		TRF79xxA_resetIrqStatus();
 
-		IRQ_CLR;
+		trf79xxa_irqClear();
 	}
 	else if(*pui8IrqStatus == TRF79XXA_IRQ_STATUS_RX_COMPLETE)
 	{	// RX flag means that EOF has been recieved
@@ -411,7 +411,7 @@ TRF79xxA_processIRQ(uint8_t * pui8IrqStatus)
 		TRF79xxA_reset();
 		TRF79xxA_resetIrqStatus();
 
-		IRQ_CLR;
+		trf79xxa_irqClear();
 	}
 }							// Interrupt Service Routine
 
@@ -1306,10 +1306,9 @@ void TRF79xxA_timerHandler(void)
 //
 //===============================================================
 
-#pragma vector = PORT2_VECTOR
-__interrupt void
-TRF79xxA_irqHandler(void)							// interrupt handler
+void TRF79xxA_irqHandler(void)
 {
+    /*
 	uint8_t ui8IrqStatus;
 
 	stopAsyncTimer();							// stop timer mode
@@ -1318,7 +1317,7 @@ TRF79xxA_irqHandler(void)							// interrupt handler
 
 	do
 	{
-		IRQ_CLR;							// PORT2 interrupt flag clear
+	    trf79xxa_irqClear();
 
 		// IRQ status register has to be read
 		ui8IrqStatus = TRF79xxA_readIrqStatus();
@@ -1336,5 +1335,6 @@ TRF79xxA_irqHandler(void)							// interrupt handler
 		}
 	} while((IRQ_PORT & IRQ_PIN) == IRQ_PIN);
 	__bic_SR_register_on_exit(LPM0_bits);
+	*/
 }
 

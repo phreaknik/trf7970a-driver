@@ -283,6 +283,7 @@ uint8_t * TRF79xxA_getTrfBuffer(void);
 uint8_t TRF79xxA_getIsoControlValue(void);
 bool TRF79xxA_checkExternalRfField(void);
 void TRF79xxA_timerHandler(void);
+void TRF79xxA_irqHandler(void);
 
 //===============================================================
 
@@ -298,6 +299,7 @@ extern void trf79xxaSpi_writeSingle(uint8_t *value);
 extern void trf79xxaSpi_writeCont(uint8_t *payload, uint8_t len);
 extern void trf79xxaSpi_readSingle(uint8_t *value);
 extern void trf79xxaSpi_readCont(uint8_t *payload, uint8_t len);
+extern void trf79xxa_irqClear();
 
 //---- Timing ---------------------------------------------------
 extern void delayMillisecond(unsigned int msDelay);
@@ -306,7 +308,7 @@ extern void startAsyncTimer(unsigned int msDelay,
 extern void stopAsyncTimer();
 extern void resetAsyncTimer();
 
-//---- NFC Event Handlers ---------------------------------------
+//---- Event Handlers -------------------------------------------
 extern void nfcEventHandler(NfcEvent_t event);
 
 //===============================================================
